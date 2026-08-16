@@ -1,0 +1,25 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'node:path';
+
+export default defineConfig({
+  root: 'option-2',
+  base: '/',
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        index: resolve(import.meta.dirname, 'option-2/index.html'),
+        tentang: resolve(import.meta.dirname, 'option-2/tentang/index.html'),
+        layanan: resolve(import.meta.dirname, 'option-2/layanan/index.html'),
+        portofolio: resolve(import.meta.dirname, 'option-2/portofolio/index.html'),
+        gallery: resolve(import.meta.dirname, 'option-2/gallery/index.html'),
+        harga: resolve(import.meta.dirname, 'option-2/harga/index.html'),
+        article: resolve(import.meta.dirname, 'option-2/article/index.html'),
+        articleCurtainWall: resolve(import.meta.dirname, 'option-2/article/perbedaan-curtain-wall-stick-dan-unitized/index.html'),
+        articleSistemCurtainWall: resolve(import.meta.dirname, 'option-2/article/sistem-curtain-wall-stick-alexindo/index.html'),
+        kontak: resolve(import.meta.dirname, 'option-2/kontak/index.html')
+      }
+    }
+  }
+});
