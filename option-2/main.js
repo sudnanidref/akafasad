@@ -2,14 +2,14 @@ const nav = document.querySelector('#nav');
 if (nav) addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), { passive: true });
 
 const menu = document.querySelector('.menu');
-const mobileNav = document.querySelector('.mobile-nav');
-if (menu && mobileNav) {
+const primaryNav = document.querySelector('.nav-links');
+if (menu && primaryNav) {
   menu.addEventListener('click', () => {
-    const open = menu.classList.toggle('open'); mobileNav.classList.toggle('open', open);
+    const open = menu.classList.toggle('open'); primaryNav.classList.toggle('open', open);
     menu.setAttribute('aria-expanded', open); document.body.style.overflow = open ? 'hidden' : '';
   });
-  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menu.classList.remove('open'); mobileNav.classList.remove('open');
+  primaryNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open'); primaryNav.classList.remove('open');
     menu.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
   }));
 }
