@@ -1,3 +1,7 @@
+import { initWhatsAppTracking } from './whatsapp-tracking.mjs';
+
+initWhatsAppTracking();
+
 const nav = document.querySelector('#nav');
 if (nav) addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), { passive: true });
 
