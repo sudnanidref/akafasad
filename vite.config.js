@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
+import { sharedComponents } from './build/components.mjs';
 
 export default defineConfig({
   root: 'option-2',
   base: '/',
+  plugins: [sharedComponents(resolve(import.meta.dirname, 'option-2/components'))],
   build: {
     outDir: '../dist',
     emptyOutDir: true,
