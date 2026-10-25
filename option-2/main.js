@@ -8,14 +8,56 @@ if (nav) addEventListener('scroll', () => nav.classList.toggle('scrolled', scrol
 const menu = document.querySelector('.menu');
 const primaryNav = document.querySelector('.nav-links');
 if (menu && primaryNav) {
-  menu.addEventListener('click', () => {
-    const open = menu.classList.toggle('open'); primaryNav.classList.toggle('open', open);
-    menu.setAttribute('aria-expanded', open); document.body.style.overflow = open ? 'hidden' : '';
+  const services = primaryNav.querySelector('.nav-services');
+  const submenuToggle = primaryNav.querySelector('.nav-submenu-toggle');
+  const submenu = primaryNav.querySelector('.nav-submenu');
+
+  const setSubmenu = (open, returnFocus = false) => {
+    if (!services || !submenuToggle) return;
+    services.classList.toggle('open', open);
+    submenuToggle.setAttribute('aria-expanded', String(open));
+    submenuToggle.setAttribute('aria-label', `${open ? 'Tutup' : 'Buka'} submenu Layanan`);
+    if (returnFocus) submenuToggle.focus();
+  };
+  const setMenu = (open, returnFocus = false) => {
+    menu.classList.toggle('open', open);
+    primaryNav.classList.toggle('open', open);
+    menu.setAttribute('aria-expanded', String(open));
+    menu.setAttribute('aria-label', `${open ? 'Tutup' : 'Buka'} navigasi`);
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open) setSubmenu(false);
+    if (returnFocus) menu.focus();
+  };
+
+  menu.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') !== 'true'));
+  submenuToggle?.addEventListener('click', event => {
+    event.stopPropagation();
+    setSubmenu(submenuToggle.getAttribute('aria-expanded') !== 'true');
   });
-  primaryNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menu.classList.remove('open'); primaryNav.classList.remove('open');
-    menu.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
+  submenuToggle?.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowDown') return;
+    event.preventDefault();
+    setSubmenu(true);
+    submenu?.querySelector('a')?.focus();
+  });
+  services?.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    event.stopPropagation();
+    setSubmenu(false, true);
+  });
+  services?.addEventListener('focusout', () => requestAnimationFrame(() => {
+    if (services && !services.contains(document.activeElement)) setSubmenu(false);
   }));
+  document.addEventListener('click', event => {
+    if (services && !services.contains(event.target)) setSubmenu(false);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    if (submenuToggle?.getAttribute('aria-expanded') === 'true') setSubmenu(false, true);
+    else if (menu.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+  });
+  primaryNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 }
 
 const animateNumber = el => {

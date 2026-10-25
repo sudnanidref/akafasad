@@ -3,9 +3,15 @@ import { resolve } from 'node:path';
 
 const COMPONENT_MARKER = /<!--\s*component:([a-z][a-z0-9-]*)\s*-->/g;
 const ACTIVE_TOKEN = /\{\{active:([a-z][a-z0-9-]*)\}\}/g;
+const ACTIVE_PATH_TOKEN = /\{\{active-path:([^}]+)\}\}/g;
+
+function cleanRoute(routePath = '/') {
+  const clean = routePath.split(/[?#]/, 1)[0].replace(/\/index\.html$/, '/');
+  return clean.endsWith('/') ? clean : `${clean}/`;
+}
 
 export function activeSection(routePath = '/') {
-  const clean = routePath.split(/[?#]/, 1)[0].replace(/\/index\.html$/, '/');
+  const clean = cleanRoute(routePath);
   const first = clean.split('/').filter(Boolean)[0];
   if (!first || first === 'index.html') return 'home';
   return first === 'article' ? 'article' : first;
@@ -13,7 +19,10 @@ export function activeSection(routePath = '/') {
 
 function renderActiveState(component, routePath) {
   const section = activeSection(routePath);
-  return component.replace(ACTIVE_TOKEN, (_, name) => name === section ? ' class="active"' : '');
+  const clean = cleanRoute(routePath);
+  return component
+    .replace(ACTIVE_TOKEN, (_, name) => name === section ? ' class="active"' : '')
+    .replace(ACTIVE_PATH_TOKEN, (_, path) => clean === cleanRoute(path) ? ' active' : '');
 }
 
 export function renderComponents(html, directory, routePath = '/') {

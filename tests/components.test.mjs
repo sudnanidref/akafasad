@@ -11,6 +11,13 @@ test('activeSection maps nested article routes to article', () => {
   assert.equal(activeSection('/article/detail/index.html'), 'article');
 });
 
+test('renderer marks the layanan parent and exact child route active', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'aka-components-'));
+  writeFileSync(join(dir, 'header.html'), '<nav><a{{active:layanan}}>Layanan</a><a class="child{{active-path:/layanan/acp-cladding/}}">ACP</a><a class="child{{active-path:/layanan/curtain-wall-fasad-kaca/}}">Curtain Wall</a></nav>');
+  const output = renderComponents('<!-- component:header -->', dir, '/layanan/acp-cladding/index.html');
+  assert.equal(output, '<nav><a class="active">Layanan</a><a class="child active">ACP</a><a class="child">Curtain Wall</a></nav>');
+});
+
 test('renderer expands shared components and route active state', () => {
   const dir = mkdtempSync(join(tmpdir(), 'aka-components-'));
   writeFileSync(join(dir, 'header.html'), '<header><a{{active:home}}>Home</a><a{{active:harga}}>Harga</a></header>');
