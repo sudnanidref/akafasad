@@ -25,6 +25,7 @@ if (menu && primaryNav) {
     menu.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-label', `${open ? 'Tutup' : 'Buka'} navigasi`);
     document.body.style.overflow = open ? 'hidden' : '';
+    document.body.classList.toggle('nav-open', open);
     if (!open) setSubmenu(false);
     if (returnFocus) menu.focus();
   };
